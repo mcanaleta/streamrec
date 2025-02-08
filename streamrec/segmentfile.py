@@ -1,6 +1,6 @@
 from itertools import tee
 from pathlib import Path
-from time import strftime, gmtime
+from datetime import datetime, timezone
 from typing import Iterable
 import logging
 import os
@@ -37,7 +37,7 @@ class SegmentFile:
             logger.error("First packet ts %s is less than segment ts %s",
                          ts, self.segment_ts)
             raise ValueError("First packet ts is less than segment ts")
-        ts_str = strftime("%Y%m%d-%H%M%S-%Z", gmtime(ts))
+        ts_str = datetime.fromtimestamp(ts, tz=timezone.utc).strftime("%Y%m%d-%H%M%S-UTC")
         filename = f"{ts_str}_{self.session.uuid}.mp3"
         if tmp:
             filename += ".tmp"
