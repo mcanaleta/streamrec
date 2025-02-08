@@ -11,7 +11,11 @@ dependencies = [
     "av (>=14.1.0,<15.0.0)"
 ]
 requires-python = ">=3.10,<=3.12.8"
-repository = "https://github.com/mcanaleta/streamrec"
+
+[project.urls]
+Homepage = "https://github.com/mcanaleta/streamrec"
+Repository = "https://github.com/mcanaleta/streamrec"
+Issues = "https://github.com/mcanaleta/streamrec/issues"
 
 [project.scripts]
 streamrec = "streamrec.app:app"
