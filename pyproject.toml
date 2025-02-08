@@ -1,0 +1,24 @@
+[project]
+name = "streamrec"
+version = "0.1.0"
+description = "A streaming recorder application"
+authors = [
+    { name="Marc Canaleta", email="mcanaleta@gmail.com" }
+]
+dependencies = [
+    "numpy (>=2.2.2,<3.0.0)",
+    "typer (>=0.15.1,<0.16.0)",
+    "av (>=14.1.0,<15.0.0)"
+]
+requires-python = ">=3.10,<=3.12.8"
+repository = "https://github.com/mcanaleta/streamrec"
+
+[project.scripts]
+streamrec = "streamrec.app:app"
+
+[tool.poetry.group.dev.dependencies]
+tox = "^4.24.1"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
