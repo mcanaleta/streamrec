@@ -1,39 +1,37 @@
-#
-name: Create docker image
-
-# Configures this workflow to run every time a change is pushed to the branch called `release`.
-on:
-  workflow_run:
-    workflows: ["Run Tests"]
-    types: 
-      - completed
-
-# Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
+name: Test, Build, Push and Tag
+on: [push]
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
-# There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
 jobs:
-  build-and-push-image:
+  test:
     runs-on: ubuntu-latest
-    # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
+
     permissions:
       contents: read
       packages: write
       attestations: write
       id-token: write
-      #
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      # Uses the `docker/login-action` action to log in to the Container registry registry using the account and password that will publish the packages. Once published, the packages are scoped to the account defined here.
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12' 
+      - name: Install Tox
+        run: pip install tox
+
+      - name: Run Tox
+        run: tox
+
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       # This step uses [docker/metadata-action](https://github.com/docker/metadata-action#about) to extract tags and labels that will be applied to the specified image. The `id` "meta" allows the output of this step to be referenced in a subsequent step. The `images` value provides the base name for the tags and labels.
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -68,3 +66,15 @@ jobs:
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
       
+      - name: Tag new version (only for non-tag push)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          latest_tag="${TAG:-0.0.0}"
+          IFS='.' read -ra VERSION <<< "$latest_tag"
+          major=${VERSION[0]}
+          minor=${VERSION[1]}
+          patch=${VERSION[2]}
+          new_tag="$major.$minor.$((patch + 1))"
+          echo "NEW_TAG=$new_tag" >> $GITHUB_ENV
+          git tag $NEW_TAG
+          git push origin $NEW_TAG
