@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: read
+      contents: write
       packages: write
       attestations: write
       id-token: write
@@ -70,11 +70,13 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           latest_tag="${TAG:-0.0.0}"
+          echo "Latest tag: $latest_tag"
           IFS='.' read -ra VERSION <<< "$latest_tag"
           major=${VERSION[0]}
           minor=${VERSION[1]}
           patch=${VERSION[2]}
           new_tag="$major.$minor.$((patch + 1))"
+          echo "Will tag new version: $new_tag"
           echo "NEW_TAG=$new_tag" >> $GITHUB_ENV
           git tag $NEW_TAG
           git push origin $NEW_TAG
