@@ -1,4 +1,4 @@
-name: Run Tox Tests
+name: Run Tests
 on: [push]
 jobs:
   test:
@@ -6,11 +6,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.13' 
-      - name: Install Tox
-        run: pip install tox
+          python-version: '3.13'
+
+      - name: Install Poetry
+        run: pip install poetry
+
+      - name: Configure Poetry (No Virtualenv)
+        run: poetry config virtualenvs.create false
+
+      - name: Install Dependencies (Including Dev)
+        run: poetry install --with dev
 
       - name: Run Tox
         run: tox
