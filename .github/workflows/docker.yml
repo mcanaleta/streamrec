@@ -1,11 +1,10 @@
 #
-name: Create and publish a Docker image
+name: Create docker image
 
 # Configures this workflow to run every time a change is pushed to the branch called `release`.
 on:
   workflow_run:
     workflows: ["Run Tests"]
-    # branches: [release]
     types: 
       - completed
 
