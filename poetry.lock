@@ -165,7 +165,7 @@ version = "2.2.2"
 description = "Fundamental package for array computing in Python"
 optional = false
 python-versions = ">=3.10"
-groups = ["main"]
+groups = ["dev"]
 files = [
     {file = "numpy-2.2.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:7079129b64cb78bdc8d611d1fd7e8002c0a2565da6a47c4df8062349fee90e3e"},
     {file = "numpy-2.2.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:2ec6c689c61df613b783aeb21f945c4cbe6c51c28cb70aae8430577ab39f163e"},
@@ -461,5 +461,5 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 
 [metadata]
 lock-version = "2.1"
-python-versions = ">=3.10,<=3.12.8"
-content-hash = "72a2640acf15eecfd86ed8be6fdc10f1b72d6035d6da2de81234d9ebbbe7a735"
+python-versions = ">=3.10,<3.14"
+content-hash = "5788ce29d9ec28bb3d7407451aa3d8ebd2fc0609e31388e8d90127aeafb3f7d8"
